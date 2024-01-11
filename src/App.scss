@@ -1,0 +1,161 @@
+$comment-box-bg: #f6f6f6;
+$white: #fff;
+$blue: #0097ff;
+$lightGrey: lightgray;
+$grey: grey;
+
+.container {
+  height: 100vh;
+  overflow: scroll;
+  display: flex;
+  justify-content: start;
+  flex-direction: column;
+  align-items: center;
+
+  .inner-container {
+    width: 50%;
+
+  }
+
+  .comment-container {
+    width: 100%;
+
+    .comments-inner-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .comments {
+      width: 100%;
+      background-color: $comment-box-bg;
+      padding: 20px;
+      margin: 10px 0px;
+      border: 1px solid $lightGrey;
+      border-radius: 4px;
+      position: relative;
+      box-sizing: border-box;
+      &.reply {
+        width: 80%;
+      }
+    }
+
+    .material-symbols-outlined {
+      font-size: 18px;
+    }
+
+    .sort {
+      margin: 10px;
+      display: flex;
+      justify-content: flex-end;
+      font-size: 14px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .heading {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .name {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .timestamp {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .comment {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 20px;
+
+    }
+
+    .edit {
+      color: $blue;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      margin-right: 10px;
+    }
+
+    .delete {
+      position: absolute;
+      right: -10px;
+      top: 70px;
+      height: 24px;
+      width: 24px;
+      background-color: $grey;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all ease-in-out 0.2s;
+      color: $white;
+
+      &:hover {
+        transform: scale(1.2);
+        box-shadow: 0px 0px 4px 3px $lightGrey
+      }
+    }
+  }
+}
+
+.comment-box {
+  padding: 20px;
+  background-color: $comment-box-bg;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid $lightGrey;
+  border-radius: 4px;
+  margin: 30px 0px;
+  box-sizing: border-box;
+  width: 100%;
+
+  .name {
+    font-weight: 600;
+    margin: 10px 0px;
+  }
+
+  &.reply {
+    width: 80%;
+    margin: 10px 0px;
+  }
+
+  input,
+  textarea {
+    padding: 8px;
+    border: none;
+    border-radius: 3px;
+    resize: none;
+    flex: 1;
+    margin: 10px 0px;
+    outline: 1px solid $lightGrey;
+
+    &::placeholder {
+      color: $grey;
+    }
+
+    &:focus {
+      outline: 1px solid $grey;
+    }
+  }
+
+  button {
+    border: none;
+    background-color: $blue;
+    color: $white;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 4px;
+    float: right;
+    cursor: pointer;
+  }
+}
