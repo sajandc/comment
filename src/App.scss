@@ -1,8 +1,9 @@
-$comment-box-bg: #f6f6f6;
+$comment-box-bg: #f2f2f2;
 $white: #fff;
 $blue: #0097ff;
 $lightGrey: lightgray;
 $grey: grey;
+$bg: #fffffb;
 
 .container {
   height: 100vh;
@@ -11,6 +12,7 @@ $grey: grey;
   justify-content: start;
   flex-direction: column;
   align-items: center;
+  background-color: $bg;
 
   .inner-container {
     width: 50%;
@@ -35,13 +37,10 @@ $grey: grey;
       border-radius: 4px;
       position: relative;
       box-sizing: border-box;
+
       &.reply {
         width: 80%;
       }
-    }
-
-    .material-symbols-outlined {
-      font-size: 18px;
     }
 
     .sort {
@@ -56,24 +55,30 @@ $grey: grey;
     .heading {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin-bottom: 20px;
     }
 
     .name {
       font-size: 16px;
       font-weight: 600;
+      display: flex;
+      align-items: center;
     }
 
     .timestamp {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
+      display: flex;
+      align-items: center;
     }
 
     .comment {
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 400;
       margin-bottom: 20px;
-
+      display: flex;
+      align-items: center;
     }
 
     .edit {
@@ -82,6 +87,7 @@ $grey: grey;
       cursor: pointer;
       display: inline-flex;
       margin-right: 10px;
+      font-size: 13px;
     }
 
     .delete {
@@ -117,6 +123,9 @@ $grey: grey;
   margin: 30px 0px;
   box-sizing: border-box;
   width: 100%;
+  position: sticky;
+  top: 30px;
+  z-index: 2;
 
   .name {
     font-weight: 600;
@@ -157,5 +166,23 @@ $grey: grey;
     border-radius: 4px;
     float: right;
     cursor: pointer;
+    display: flex;
+    align-items: center;
   }
+}
+
+.font-16 {
+  font-size: 16px;
+}
+
+.font-20 {
+  font-size: 20px;
+}
+
+.mr-10 {
+  margin-right: 10px;
+}
+
+.ml-5 {
+  margin-left: 5px;
 }

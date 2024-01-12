@@ -1,90 +1,74 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import CommentBox from "../CommentBox";
-import dt from "../../data.json";
+import CommentLine from "./commentLine";
 
-export default function Comment() {
+export default function Comment({
+  data = [],
+  onSort,
+  sort,
+  onDelete,
+  onUpdate,
+  onReply,
+}) {
   const [state, setState] = useState({
-    sort: "asc",
-    data: dt?.data || [],
     currentTimeStamp: "",
     reply: false,
     edit: false,
   });
 
+  const onSubmitReply = (dt, timestamp) => {
+    setState({ ...state, reply: false });
+    onReply(dt, timestamp);
+  };
+
   const commentLineItem = (el, isReply) => {
     return (
       <>
-        <div
-          className={`comments ${isReply ? "reply" : ""}`}
-          key={el.timestamp}>
-          <div className="heading">
-            <div className="name">{el.name}</div>
-            <div className="timestamp">
-              {new Date(el.timestamp).toDateString()}
-            </div>
-          </div>
-          <div className="comment">{el.comment}</div>
-          <div id={`edit-${el.timestamp}`} className="edit">
-            Edit
-          </div>
-          {!isReply && (
-            <div id={`reply-${el.timestamp}`} className="edit">
-              Reply
-            </div>
-          )}
-          <div id={`delete-${el.timestamp}`} className="delete">
-            <span
-              id={`delete-${el.timestamp}`}
-              class="material-symbols-outlined">
-              delete
-            </span>
-          </div>
-        </div>
+        <CommentLine key={el.timestamp} data={el} />
         {state.reply && state.currentTimeStamp === el.timestamp && !isReply && (
-          <CommentBox reply />
+          <CommentBox
+            reply
+            onSubmit={(dt) => onSubmitReply(dt, el.timestamp)}
+          />
         )}
-        {el.reply?.length > 0 && el.reply.map((e) => commentLineItem(e, true))}
+        {el.reply?.length > 0 &&
+          el.reply.map((e) =>
+            state.edit && e.timestamp === state.currentTimeStamp ? (
+              <CommentBox
+                key={e.timestamp}
+                data={e}
+                edit
+                reply
+                onSubmit={(dt) => onUpdate(dt, el.timestamp, e.timestamp)}
+              />
+            ) : (
+              <CommentLine
+                key={e.timestamp}
+                parentId={el.timestamp}
+                data={e}
+                isReply
+              />
+            )
+          )}
       </>
     );
   };
 
-  useEffect(() => {
-    setState({
-      ...state,
-      data: sort("asc", dt.data),
-    });
-  }, []);
-
-  const sort = (type, data) => {
-    return data.sort((a, b) => {
-      if (a.timestamp < b.timestamp) {
-        return type === "asc" ? -1 : 1;
-      }
-      if (a.timestamp > b.timestamp) {
-        return type === "asc" ? 1 : -1;
-      }
-      return 0;
-    });
-  };
-
-  const onClickSort = () => {
-    setState({
-      ...state,
-      sort: state.sort === "asc" ? "dsc" : "asc",
-      data: sort(state.sort === "asc" ? "dsc" : "asc", state.data),
-    });
-  };
-
   const onClickElement = (event) => {
-    const [type, id] = event.target?.id?.split("-");
+    const [type, id, parentId] = event.target?.id?.split("-");
     switch (type) {
       case "delete":
-        const dt = [...state.data].filter((el) => el.timestamp !== +id);
-        setState({
-          ...state,
-          data: dt,
-          currentTimeStamp: +id,
-        });
+        if (parentId) {
+          let dt = [...data];
+          const index = dt.findIndex((el) => el.timestamp === +parentId);
+          dt[index].reply = dt[index].reply.filter(
+            (el) => el.timestamp !== +id
+          );
+          onDelete(dt);
+        } else {
+          const dt = [...data].filter((el) => el.timestamp !== +id);
+          onDelete(dt);
+        }
         break;
       case "edit":
         setState({
@@ -93,6 +77,7 @@ export default function Comment() {
           reply: false,
           edit: true,
         });
+
         break;
       case "reply":
         setState({
@@ -109,22 +94,28 @@ export default function Comment() {
 
   return (
     <div className="comment-container">
-      <div className="sort" onClick={onClickSort}>
+      <div className="sort" onClick={onSort}>
         Sort by: Date and Time
-        <span class="material-symbols-outlined">
-          {state.sort === "asc" ? "south" : "north"}
+        <span className="material-symbols-outlined">
+          {sort === "asc" ? "south" : "north"}
         </span>
       </div>
 
       <div className="comments-inner-container" onClick={onClickElement}>
-        {state?.data.map((el) =>
+        {data.map((el) =>
           state.edit && el.timestamp === state.currentTimeStamp ? (
-            <CommentBox
-              data={state.data.find(
-                (el) => el.timestamp === state.currentTimeStamp
-              )}
-              edit
-            />
+            <>
+              <CommentBox
+                key={el.timestamp}
+                data={el}
+                edit
+                onSubmit={(dt) => onUpdate(dt, el.timestamp)}
+              />
+              {el.reply?.length > 0 &&
+                el.reply.map((e) => (
+                  <CommentLine key={e.timestamp} data={e} isReply />
+                ))}
+            </>
           ) : (
             commentLineItem(el)
           )
