@@ -57,11 +57,12 @@ function App() {
     const dt = state.data;
 
     dt.push(data);
+    const sortedData = sort(state.sortType, dt);
     setState({
       ...state,
-      data: dt,
+      data: sortedData,
     });
-    updateCacheData(dt);
+    updateCacheData(sortedData);
   };
 
   const onDelete = (dt) => {
@@ -105,22 +106,30 @@ function App() {
     } else {
       tempData = [...tempData.filter((el) => el.timestamp !== timestamp), dt];
     }
+    const sortedData = sort(state.sortType, tempData);
     setState({
       ...state,
-      data: sort(state.sortType, tempData),
+      data: sortedData,
     });
-    updateCacheData(tempData);
+    updateCacheData(sortedData);
   };
 
   const onReply = (dt, timestamp) => {
     let data = [...state.data];
     const index = state.data.findIndex((el) => el.timestamp === timestamp);
+    if (!data[index].reply) {
+      data[index] = {
+        ...data[index],
+        reply: [],
+      };
+    }
     data[index].reply.push(dt);
+    const sortedData = sort(state.sortType, data);
     setState({
       ...state,
-      data: sort(state.sortType, data),
+      data: sortedData,
     });
-    updateCacheData(data);
+    updateCacheData(sortedData);
   };
 
   return (
